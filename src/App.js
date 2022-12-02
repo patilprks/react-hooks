@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useReducer } from "react";
+import { useState, useReducer, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -7,6 +7,7 @@ import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import CardContent from "@mui/material/CardContent";
+import axios from "axios";
 
 const reducer = (state, action) => {
   switch(action.type){
@@ -32,6 +33,17 @@ function App() {
   const [inputValue, setInputValue] = useState("Patil");
 
   const [state, dispatch] = useReducer(reducer, {count: 0, showText: true});
+
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    axios.get("http://jsonplaceholder.typicode.com/comments")
+    .then((response)=>{
+      setData(response.data[0].email)
+      console.log("API was Called")
+    });
+  },[counter])
+ 
 
   const incrementCounter = () => {
     setCounter(counter + 1);
@@ -94,6 +106,25 @@ function App() {
           </div>
         </CardContent>
       </Card>
+
+      <Divider className="mr" />
+      <p>3. useEffect()</p>
+      {/* useState example 1 */}
+      <Card sx={{ minWidth: 50 }}>
+        <CardContent>
+          <div>
+          <p>Hello - { data }</p>
+          <Button
+              className="ml-15"
+              variant="contained"
+              onClick={()=>{setCounter(counter + 1)}}
+            >
+              API Hit
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+     
     </div>
   );
 }
